@@ -1,0 +1,3257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CuriosTech — O portal que transforma curiosidade em conhecimento</title>
+  <meta name="description" content="Tecnologia, inteligência artificial, ciência e curiosidades que fazem sentido. Descubra o que está moldando o futuro digital." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════
+       1.  DESIGN TOKENS & RESET
+    ═══════════════════════════════════════════════════ */
+    :root {
+      /* Brand */
+      --blue:        #2563eb;
+      --blue-dark:   #1e40af;
+      --blue-soft:   #eff6ff;
+      --cyan:        #06b6d4;
+      --cyan-soft:   #ecfeff;
+
+      /* Neutrals */
+      --ink:         #0f172a;
+      --dark:        #1e293b;
+      --mid:         #475569;
+      --soft:        #64748b;
+      --light:       #94a3b8;
+      --line:        #e2e8f0;
+      --hairline:    #f1f5f9;
+      --bg:          #f5f7fa;
+      --white:       #ffffff;
+
+      /* Categories */
+      --cat-tech-a:    #2563eb;  --cat-tech-b:    #4338ca;
+      --cat-curio-a:   #10b981;  --cat-curio-b:   #0d9488;
+      --cat-ai-a:      #8b5cf6;  --cat-ai-b:      #6d28d9;
+      --cat-gad-a:     #f97316;  --cat-gad-b:     #eab308;
+      --cat-sci-a:     #06b6d4;  --cat-sci-b:     #38bdf8;
+      --cat-net-a:     #ec4899;  --cat-net-b:     #f43f5e;
+
+      /* Effects */
+      --shadow-xs:   0 1px 2px rgba(15,23,42,.04);
+      --shadow-sm:   0 2px 8px rgba(15,23,42,.06);
+      --shadow-md:   0 4px 16px rgba(15,23,42,.08);
+      --shadow-lg:   0 12px 32px rgba(37,99,235,.14);
+      --shadow-glow: 0 0 0 1px rgba(37,99,235,.08), 0 8px 24px rgba(37,99,235,.12);
+
+      --radius-sm:   8px;
+      --radius:      12px;
+      --radius-lg:   20px;
+      --radius-xl:   28px;
+
+      --ease:        cubic-bezier(.4, 0, .2, 1);
+      --ease-out:    cubic-bezier(.16, 1, .3, 1);
+      --t-fast:      .18s var(--ease);
+      --t:           .28s var(--ease);
+      --t-slow:      .5s var(--ease-out);
+
+      --container:   1200px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    img, svg { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    h1, h2, h3, h4 { letter-spacing: -.02em; line-height: 1.2; }
+
+    .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 700; }
+
+    ::selection { background: var(--blue); color: var(--white); }
+
+    /* ═══════════════════════════════════════════════════
+       2.  LAYOUT
+    ═══════════════════════════════════════════════════ */
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section { padding: 56px 0; position: relative; }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .section-head__title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-head__title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--blue), var(--cyan));
+      border-radius: 4px;
+    }
+    .section-head__sub {
+      font-size: .9375rem;
+      color: var(--soft);
+      max-width: 420px;
+    }
+    .section-head__link {
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--blue);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap var(--t-fast);
+    }
+    .section-head__link:hover { gap: 10px; }
+
+    /* ═══════════════════════════════════════════════════
+       3.  TOP DECORATION & READING PROGRESS
+    ═══════════════════════════════════════════════════ */
+    .top-line {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--blue));
+      background-size: 200% 100%;
+      animation: shimmer 6s linear infinite;
+      z-index: 1100;
+    }
+    @keyframes shimmer {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 4px; left: 0;
+      height: 2px;
+      background: var(--blue);
+      width: 0%;
+      z-index: 1099;
+      transition: width .1s linear;
+    }
+
+    /* Announcement bar */
+    .announce {
+      background: linear-gradient(90deg, var(--ink), var(--dark));
+      color: #cbd5e1;
+      font-size: .8125rem;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+    }
+    .announce__pill {
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      color: var(--white);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: .6875rem;
+      letter-spacing: .5px;
+    }
+    .announce a {
+      color: var(--white);
+      font-weight: 600;
+      border-bottom: 1px dashed rgba(255,255,255,.3);
+      transition: border-color var(--t-fast);
+    }
+    .announce a:hover { border-color: var(--cyan); }
+    .announce__close {
+      position: absolute;
+      right: 16px;
+      color: #94a3b8;
+      font-size: 1rem;
+      padding: 4px 8px;
+      transition: color var(--t-fast);
+    }
+    .announce__close:hover { color: var(--white); }
+
+    /* ═══════════════════════════════════════════════════
+       4.  HEADER / NAVBAR
+    ═══════════════════════════════════════════════════ */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--t), box-shadow var(--t);
+    }
+    .header.scrolled {
+      border-bottom-color: var(--line);
+      box-shadow: 0 1px 0 rgba(15,23,42,.04);
+    }
+
+    .nav {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: -.03em;
+      color: var(--ink);
+    }
+    .logo__mark {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-size: 1.05rem;
+      box-shadow: 0 4px 12px rgba(37,99,235,.3);
+    }
+    .logo__text { display: flex; }
+    .logo__text span:last-child {
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+    }
+    .nav__link {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--mid);
+      transition: all var(--t-fast);
+      white-space: nowrap;
+      position: relative;
+    }
+    .nav__link:hover {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+    .nav__link.active {
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .nav__link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 16px; height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+
+    .nav__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--mid);
+      display: grid;
+      place-items: center;
+      transition: all var(--t-fast);
+    }
+    .icon-btn:hover { background: var(--hairline); color: var(--ink); }
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-size: .8125rem;
+      font-weight: 600;
+      transition: all var(--t-fast);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn--ghost {
+      color: var(--mid);
+    }
+    .btn--ghost:hover { color: var(--ink); background: var(--hairline); }
+    .btn--outline {
+      border: 1.5px solid var(--line);
+      color: var(--ink);
+    }
+    .btn--outline:hover { border-color: var(--blue); color: var(--blue); }
+    .btn--primary {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(37,99,235,.25);
+    }
+    .btn--primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37,99,235,.35);
+    }
+    .btn--lg { padding: 12px 24px; font-size: .9375rem; border-radius: 12px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      transition: background var(--t-fast);
+    }
+    .hamburger:hover { background: var(--hairline); }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform .3s var(--ease-out), opacity .2s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .mobile-nav {
+      position: fixed;
+      top: 72px; left: 0; right: 0;
+      background: var(--white);
+      padding: 20px 24px 28px;
+      z-index: 999;
+      box-shadow: 0 16px 32px rgba(15,23,42,.12);
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .3s var(--ease-out), opacity .25s ease;
+      max-height: calc(100vh - 72px);
+      overflow-y: auto;
+    }
+    .mobile-nav.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-nav a {
+      display: block;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: .9375rem;
+      font-weight: 500;
+      color: var(--mid);
+      margin-bottom: 2px;
+      transition: all var(--t-fast);
+    }
+    .mobile-nav a:hover { background: var(--blue-soft); color: var(--blue); }
+    .mobile-nav__divider { height: 1px; background: var(--line); margin: 12px 4px; }
+    .mobile-nav__actions { display: flex; gap: 10px; padding: 4px; }
+    .mobile-nav__actions .btn { flex: 1; justify-content: center; }
+
+    /* ═══════════════════════════════════════════════════
+       5.  HERO
+    ═══════════════════════════════════════════════════ */
+    .hero {
+      padding: 56px 0 48px;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(6,182,212,.10) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 100px; left: -200px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,235,.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero__intro {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--mid);
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-xs);
+    }
+    .hero__eyebrow .dot {
+      width: 6px; height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(16,185,129,.18);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
+      50%      { box-shadow: 0 0 0 7px rgba(16,185,129,.06); }
+    }
+    .hero__intro h1 {
+      font-size: clamp(2rem, 4.5vw, 3.25rem);
+      font-weight: 900;
+      color: var(--ink);
+      letter-spacing: -.035em;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .hero__intro h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero__intro p {
+      font-size: 1.0625rem;
+      color: var(--soft);
+      line-height: 1.65;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Featured card */
+    .featured {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: transform var(--t), box-shadow var(--t);
+      position: relative;
+    }
+    .featured:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .featured:hover .featured__media .ph-graphic { transform: scale(1.04); }
+
+    .featured__media {
+      position: relative;
+      height: 380px;
+      overflow: hidden;
+    }
+    .featured__media .ph-graphic {
+      position: absolute;
+      inset: 0;
+      transition: transform var(--t-slow);
+    }
+    .featured__overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 30%, rgba(15,23,42,.7) 100%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.15), transparent 50%);
+    }
+    .featured__top {
+      position: absolute;
+      top: 20px; left: 20px; right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .featured__bottom {
+      position: absolute;
+      bottom: 24px; left: 28px; right: 28px;
+      color: var(--white);
+    }
+    .featured__bottom h2 {
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      max-width: 92%;
+    }
+    .featured__bottom p {
+      font-size: .9375rem;
+      line-height: 1.55;
+      color: rgba(255,255,255,.85);
+      margin-bottom: 14px;
+      max-width: 88%;
+    }
+    .featured__meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: .8125rem;
+      color: rgba(255,255,255,.78);
+      font-weight: 500;
+    }
+    .featured__meta .sep { width: 3px; height: 3px; background: rgba(255,255,255,.5); border-radius: 50%; }
+    .featured__meta .author {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .featured__avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fcd34d, #f97316);
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-weight: 700;
+      font-size: .75rem;
+      border: 2px solid rgba(255,255,255,.3);
+    }
+
+    .live-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(8px);
+      padding: 5px 11px;
+      border-radius: 100px;
+      font-size: .7rem;
+      font-weight: 700;
+      color: #b91c1c;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .live-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #dc2626;
+      border-radius: 50%;
+      animation: pulse-red 1.5s infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: .35; }
+    }
+
+    /* Trending sidebar */
+    .trending {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+      position: sticky;
+      top: 88px;
+    }
+    .trending__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--hairline);
+    }
+    .trending__title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .trending__title svg { color: var(--blue); }
+    .trending__head .meta {
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--light);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .trend-item {
+      display: flex;
+      gap: 14px;
+      padding: 13px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background var(--t-fast);
+      align-items: flex-start;
+    }
+    .trend-item:hover { background: var(--blue-soft); }
+    .trend-item:not(:last-child) {
+      border-bottom: 1px solid var(--hairline);
+      border-radius: 0;
+    }
+    .trend-item:hover:not(:last-child) {
+      border-bottom-color: transparent;
+      border-radius: 10px;
+    }
+    .trend-num {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--blue);
+      opacity: .22;
+      line-height: .9;
+      min-width: 32px;
+      letter-spacing: -.05em;
+    }
+    .trend-content { flex: 1; min-width: 0; }
+    .trend-content .badge { margin-bottom: 6px; }
+    .trend-content p {
+      font-size: .8625rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .trend-content .views {
+      font-size: .7rem;
+      color: var(--light);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       6.  STATS BAND
+    ═══════════════════════════════════════════════════ */
+    .stats {
+      padding: 32px 0;
+    }
+    .stats__inner {
+      background: linear-gradient(135deg, var(--ink), var(--dark));
+      border-radius: var(--radius-xl);
+      padding: 36px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stats__inner::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -10%;
+      width: 60%; height: 200%;
+      background: radial-gradient(circle, rgba(6,182,212,.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .stat {
+      color: var(--white);
+      position: relative;
+    }
+    .stat__num {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+    .stat__label {
+      font-size: .8125rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       7.  CATEGORIES STRIP
+    ═══════════════════════════════════════════════════ */
+    .cat-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+    .cat-tile {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--t);
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-tile::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--cat);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--t);
+    }
+    .cat-tile:hover {
+      transform: translateY(-4px);
+      border-color: transparent;
+      box-shadow: var(--shadow-md);
+    }
+    .cat-tile:hover::before { transform: scaleX(1); }
+    .cat-tile__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      background: var(--cat-bg);
+    }
+    .cat-tile__label {
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .cat-tile__count {
+      font-size: .75rem;
+      color: var(--light);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       8.  ARTICLE CARDS
+    ═══════════════════════════════════════════════════ */
+    .articles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform var(--t), box-shadow var(--t);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s var(--ease-out);
+      z-index: 2;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .card:hover::before { transform: scaleX(1); }
+    .card:hover .card__media .ph-graphic { transform: scale(1.06); }
+
+    .card__media {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+    .card__media .ph-graphic {
+      position: absolute;
+      inset: 0;
+      transition: transform .6s var(--ease-out);
+    }
+    .card__media .badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      z-index: 1;
+    }
+    .card__bookmark {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity var(--t), transform var(--t), background var(--t-fast);
+      z-index: 2;
+    }
+    .card:hover .card__bookmark { opacity: 1; transform: translateY(0); }
+    .card__bookmark:hover { background: var(--white); }
+    .card__bookmark.saved svg { fill: var(--blue); color: var(--blue); }
+    .card__bookmark svg { width: 16px; height: 16px; color: var(--mid); }
+
+    .card__body {
+      padding: 22px 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .card__body h3 {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .card__body p {
+      font-size: .875rem;
+      color: var(--soft);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+    .card__foot {
+      padding: 14px 24px 18px;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card__author {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8125rem;
+      color: var(--mid);
+      font-weight: 500;
+      min-width: 0;
+    }
+    .card__date {
+      font-size: .8125rem;
+      color: var(--mid);
+      font-weight: 500;
+    }
+    .card__avatar {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-weight: 700;
+      font-size: .6875rem;
+      flex-shrink: 0;
+    }
+    .av-1 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+    .av-2 { background: linear-gradient(135deg, #10b981, #059669); }
+    .av-3 { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+    .av-4 { background: linear-gradient(135deg, #06b6d4, #0284c7); }
+    .av-5 { background: linear-gradient(135deg, #ec4899, #be185d); }
+    .av-6 { background: linear-gradient(135deg, #6366f1, #4338ca); }
+    .av-7 { background: linear-gradient(135deg, #14b8a6, #0e7490); }
+
+    .card__stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .75rem;
+      color: var(--light);
+    }
+    .card__stats span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card__stats svg { width: 13px; height: 13px; }
+
+    /* ═══════════════════════════════════════════════════
+       9.  GRADIENT PLACEHOLDERS (graphics)
+    ═══════════════════════════════════════════════════ */
+    .ph-graphic {
+      position: relative;
+      overflow: hidden;
+      width: 100%; height: 100%;
+    }
+    .ph-tech    { background: linear-gradient(135deg, var(--cat-tech-a), var(--cat-tech-b)); }
+    .ph-curio   { background: linear-gradient(135deg, var(--cat-curio-a), var(--cat-curio-b)); }
+    .ph-ai      { background: linear-gradient(135deg, var(--cat-ai-a), var(--cat-ai-b)); }
+    .ph-gadgets { background: linear-gradient(135deg, var(--cat-gad-a), var(--cat-gad-b)); }
+    .ph-science { background: linear-gradient(135deg, var(--cat-sci-a), var(--cat-sci-b)); }
+    .ph-internet{ background: linear-gradient(135deg, var(--cat-net-a), var(--cat-net-b)); }
+
+    /* Real image inside placeholder container */
+    .ph-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      z-index: 1;
+    }
+    /* Hide decorative overlays when a real image is used */
+    .ph-graphic:has(.ph-img)::before { display: none; }
+
+    /* Decorative SVG patterns inside placeholders */
+    .ph-graphic::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.18) 0%, transparent 35%),
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,.14) 0%, transparent 35%);
+      pointer-events: none;
+    }
+    .ph-graphic__icon {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+      color: rgba(255,255,255,.85);
+      opacity: .2;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.2));
+    }
+    .ph-graphic__pattern {
+      position: absolute;
+      inset: 0;
+      opacity: .14;
+      background-image:
+        linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 75%);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 11px;
+      border-radius: 100px;
+      font-size: .6875rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+    .badge-tech     { background: rgba(219,234,254,.95); color: #1d4ed8; }
+    .badge-curio    { background: rgba(209,250,229,.95); color: #047857; }
+    .badge-ai       { background: rgba(237,233,254,.95); color: #6d28d9; }
+    .badge-gadgets  { background: rgba(254,243,199,.95); color: #92400e; }
+    .badge-science  { background: rgba(207,250,254,.95); color: #155e75; }
+    .badge-internet { background: rgba(252,231,243,.95); color: #9d174d; }
+
+    /* ─── Empty state ─── */
+    .empty-state {
+      background: var(--white);
+      border: 2px dashed var(--line);
+      border-radius: var(--radius-xl);
+      padding: 56px 32px;
+      text-align: center;
+      margin-top: 12px;
+      animation: fadeIn .35s var(--ease-out);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      opacity: .7;
+    }
+    .empty-state h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .empty-state p {
+      font-size: .9375rem;
+      color: var(--soft);
+      max-width: 480px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+    .empty-state__actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       10. SABIA QUE...?
+    ═══════════════════════════════════════════════════ */
+    .sabia {
+      background: linear-gradient(135deg, var(--blue-soft) 0%, var(--cyan-soft) 100%);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      border-left: 6px solid var(--blue);
+      position: relative;
+      overflow: hidden;
+    }
+    .sabia::before {
+      content: '?';
+      position: absolute;
+      top: -40px; right: -20px;
+      font-family: 'Fraunces', serif;
+      font-size: 18rem;
+      font-weight: 900;
+      color: var(--blue);
+      opacity: .04;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .sabia__head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .sabia__icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      box-shadow: 0 6px 16px rgba(37,99,235,.3);
+    }
+    .sabia__head h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .sabia__sub {
+      color: var(--soft);
+      margin-bottom: 28px;
+      font-size: .9375rem;
+    }
+    .sabia__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      position: relative;
+    }
+    .sabia__item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--t), box-shadow var(--t);
+      position: relative;
+    }
+    .sabia__item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .sabia__item .icon {
+      display: inline-grid;
+      place-items: center;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--blue-soft);
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+    .sabia__item p {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    .sabia__item p strong { color: var(--blue); font-weight: 700; }
+    .sabia__item .source {
+      margin-top: 12px;
+      font-size: .7rem;
+      color: var(--light);
+      letter-spacing: .3px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       11. FEATURED AUTHOR
+    ═══════════════════════════════════════════════════ */
+    .author-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      box-shadow: var(--shadow-sm);
+    }
+    .author-block__img {
+      aspect-ratio: 1;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #fbbf24, #f97316, #ec4899);
+      display: grid;
+      place-items: center;
+      font-family: 'Fraunces', serif;
+      font-size: 7rem;
+      font-weight: 900;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(249,115,22,.25);
+    }
+    .author-block__img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.4) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, rgba(0,0,0,.15) 0%, transparent 40%);
+    }
+    .author-block__role {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    .author-block h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 8px;
+      letter-spacing: -.02em;
+    }
+    .author-block .author-title {
+      font-size: 1rem;
+      color: var(--mid);
+      margin-bottom: 18px;
+    }
+    .author-block .author-bio {
+      font-size: .9375rem;
+      color: var(--soft);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .author-block__stats {
+      display: flex;
+      gap: 32px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+    .author-stat__num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.02em;
+    }
+    .author-stat__label {
+      font-size: .75rem;
+      color: var(--light);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       12. NEWSLETTER INLINE
+    ═══════════════════════════════════════════════════ */
+    .newsletter {
+      background: linear-gradient(135deg, var(--ink) 0%, var(--blue-dark) 100%);
+      border-radius: var(--radius-xl);
+      padding: 56px 48px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .newsletter::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 70%; height: 200%;
+      background: radial-gradient(circle, rgba(6,182,212,.25) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .newsletter::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: -10%;
+      width: 50%; height: 100%;
+      background: radial-gradient(circle, rgba(139,92,246,.20) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .newsletter__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .newsletter__icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: grid;
+      place-items: center;
+      font-size: 1.75rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 32px rgba(6,182,212,.4);
+    }
+    .newsletter h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 900;
+      margin-bottom: 12px;
+      letter-spacing: -.02em;
+    }
+    .newsletter p {
+      color: #cbd5e1;
+      font-size: 1rem;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .newsletter__form {
+      display: flex;
+      gap: 8px;
+      max-width: 460px;
+      margin: 0 auto 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 6px;
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .newsletter__form input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--white);
+      font-family: inherit;
+      font-size: .9375rem;
+      padding: 10px 14px;
+      outline: none;
+      min-width: 0;
+    }
+    .newsletter__form input::placeholder { color: #94a3b8; }
+    .newsletter__form button {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: var(--white);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: .875rem;
+      transition: opacity var(--t-fast), transform var(--t-fast);
+      white-space: nowrap;
+    }
+    .newsletter__form button:hover { opacity: .92; transform: translateY(-1px); }
+    .newsletter__perks {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: .8125rem;
+      color: #94a3b8;
+    }
+    .newsletter__perks span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .newsletter__perks svg { color: var(--cyan); }
+
+    /* ═══════════════════════════════════════════════════
+       13. TAG CLOUD
+    ═══════════════════════════════════════════════════ */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .tag {
+      padding: 8px 16px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      font-size: .8125rem;
+      font-weight: 500;
+      color: var(--mid);
+      cursor: pointer;
+      transition: all var(--t-fast);
+    }
+    .tag:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--blue-soft);
+      transform: translateY(-2px);
+    }
+    .tag .count {
+      color: var(--light);
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       14. FOOTER
+    ═══════════════════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      color: #94a3b8;
+      padding: 64px 0 28px;
+      margin-top: 48px;
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(6,182,212,.4), transparent);
+    }
+    .footer__top {
+      display: grid;
+      grid-template-columns: 1.6fr repeat(3, 1fr);
+      gap: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 28px;
+    }
+    .footer__brand .logo { color: var(--white); margin-bottom: 16px; }
+    .footer__brand p {
+      font-size: .875rem;
+      line-height: 1.7;
+      color: #64748b;
+      max-width: 320px;
+      margin-bottom: 18px;
+    }
+    .footer__social { display: flex; gap: 8px; }
+    .footer__social a {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      display: grid;
+      place-items: center;
+      color: #94a3b8;
+      transition: all var(--t-fast);
+    }
+    .footer__social a:hover {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+    .footer__social svg { width: 16px; height: 16px; }
+
+    .footer__col h4 {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .footer__col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer__col a {
+      font-size: .875rem;
+      color: #64748b;
+      transition: color var(--t-fast);
+    }
+    .footer__col a:hover { color: var(--cyan); }
+
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: .8125rem;
+      color: #475569;
+    }
+    .footer__bottom .heart { color: var(--cyan); }
+
+    /* ═══════════════════════════════════════════════════
+       15. MODAL
+    ═══════════════════════════════════════════════════ */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.65);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 44px;
+      max-width: 460px;
+      width: 100%;
+      transform: translateY(20px) scale(.96);
+      transition: transform .35s var(--ease-out);
+      position: relative;
+    }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal__close {
+      position: absolute;
+      top: 18px; right: 18px;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--hairline);
+      color: var(--mid);
+      transition: all var(--t-fast);
+      display: grid;
+      place-items: center;
+    }
+    .modal__close:hover { background: var(--line); color: var(--ink); transform: rotate(90deg); }
+    .modal__icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(37,99,235,.3);
+    }
+    .modal h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .modal p { color: var(--soft); margin-bottom: 24px; font-size: .9375rem; }
+    .modal__form { display: flex; flex-direction: column; gap: 12px; }
+    .modal__form input {
+      padding: 13px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: .9375rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color var(--t-fast), box-shadow var(--t-fast);
+    }
+    .modal__form input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px var(--blue-soft);
+    }
+    .modal__form button {
+      padding: 14px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: var(--white);
+      border-radius: 12px;
+      font-size: .9375rem;
+      font-weight: 700;
+      transition: opacity var(--t-fast);
+    }
+    .modal__form button:hover { opacity: .92; }
+    .modal__note { font-size: .75rem; color: var(--light); text-align: center; margin-top: 12px; }
+
+    /* ═══════════════════════════════════════════════════
+       16. SOBRE PAGE
+    ═══════════════════════════════════════════════════ */
+    #sobre-page { display: none; }
+    #sobre-page.visible { display: block; }
+    .sobre {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .sobre__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--mid);
+      margin-bottom: 28px;
+      transition: all var(--t-fast);
+    }
+    .sobre__back:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateX(-2px);
+    }
+    .sobre h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .sobre__lede {
+      font-size: 1.125rem;
+      color: var(--soft);
+      line-height: 1.7;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sobre h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 32px 0 12px;
+    }
+    .sobre p {
+      font-size: .9375rem;
+      color: var(--mid);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .sobre p strong { color: var(--ink); }
+
+    /* ═══════════════════════════════════════════════════
+       16b. ARTICLE PAGE (post-click view)
+    ═══════════════════════════════════════════════════ */
+    #article-page { display: none; }
+    #article-page.visible { display: block; animation: fadeIn .4s var(--ease-out); }
+
+    .article {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+    .article__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--mid);
+      margin-bottom: 28px;
+      transition: all var(--t-fast);
+    }
+    .article__back:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateX(-2px);
+    }
+    .article__category { margin-bottom: 16px; }
+    .article__title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.875rem, 4vw, 2.75rem);
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1.15;
+      letter-spacing: -.025em;
+      margin-bottom: 16px;
+    }
+    .article__lede {
+      font-size: 1.125rem;
+      color: var(--soft);
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+    .article__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .8125rem;
+      color: var(--light);
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .article__meta .sep { width: 3px; height: 3px; background: var(--light); border-radius: 50%; }
+    .article__meta .share-btns {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+    .article__meta .share-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--hairline);
+      display: grid;
+      place-items: center;
+      color: var(--mid);
+      transition: all var(--t-fast);
+    }
+    .article__meta .share-btn:hover { background: var(--blue); color: var(--white); }
+    .article__meta .share-btn svg { width: 14px; height: 14px; }
+
+    .article__hero {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 36px;
+      box-shadow: var(--shadow-md);
+    }
+    .article__hero img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .article__body { font-size: 1.0625rem; color: var(--dark); line-height: 1.75; }
+    .article__body h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.625rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 40px 0 14px;
+      letter-spacing: -.015em;
+    }
+    .article__body h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 28px 0 10px;
+    }
+    .article__body p { margin-bottom: 18px; }
+    .article__body p strong { color: var(--ink); font-weight: 700; }
+    .article__body ul, .article__body ol {
+      margin: 0 0 20px 24px;
+      padding: 0;
+    }
+    .article__body ul li, .article__body ol li {
+      margin-bottom: 8px;
+      list-style: disc;
+    }
+    .article__body ol li { list-style: decimal; }
+    .article__body blockquote {
+      border-left: 4px solid var(--blue);
+      background: var(--blue-soft);
+      padding: 18px 24px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 28px 0;
+      font-style: italic;
+      color: var(--ink);
+    }
+    .article__body a {
+      color: var(--blue);
+      border-bottom: 1px solid currentColor;
+      transition: opacity var(--t-fast);
+    }
+    .article__body a:hover { opacity: .7; }
+
+    /* Product callout card */
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+    .product-card__icon {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      background: var(--blue-soft);
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+    }
+    .product-card__name { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .product-card__desc { font-size: .875rem; color: var(--soft); margin: 0; }
+    .product-card__price {
+      font-family: 'Fraunces', serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    /* End-of-article CTA */
+    .article__end-cta {
+      background: linear-gradient(135deg, var(--blue-soft), var(--cyan-soft));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-top: 48px;
+      text-align: center;
+    }
+    .article__end-cta h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .article__end-cta p {
+      color: var(--soft);
+      margin-bottom: 18px;
+      font-size: .9375rem;
+    }
+
+    @media (max-width: 768px) {
+      .article { padding: 24px 20px 60px; }
+      .article__title { font-size: 1.75rem; }
+      .article__lede { font-size: 1rem; }
+      .product-card {
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+      }
+      .product-card__price { grid-column: 2; }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       17. SCROLL-TO-TOP & TOAST
+    ═══════════════════════════════════════════════════ */
+    .scroll-top {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(37,99,235,.4);
+      opacity: 0;
+      transform: translateY(16px) scale(.9);
+      pointer-events: none;
+      transition: all .3s var(--ease-out);
+      z-index: 900;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+    .scroll-top:hover { transform: translateY(-3px) scale(1); }
+    .scroll-top svg { width: 20px; height: 20px; color: var(--white); }
+
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: .875rem;
+      font-weight: 500;
+      box-shadow: 0 12px 32px rgba(0,0,0,.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s var(--ease-out);
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100% - 48px);
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast svg { color: #10b981; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════════════
+       18. REVEAL ANIMATIONS
+    ═══════════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       19. RESPONSIVE
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .hero__grid { grid-template-columns: 1fr 300px; }
+      .articles { grid-template-columns: repeat(2, 1fr); }
+      .stats__inner { grid-template-columns: repeat(2, 1fr); padding: 32px 36px; }
+      .cat-strip { grid-template-columns: repeat(3, 1fr); }
+      .author-block { grid-template-columns: 1fr; padding: 36px; }
+      .author-block__img { max-width: 240px; margin: 0 auto; }
+    }
+
+    @media (max-width: 768px) {
+      .nav__links, .nav__actions .btn { display: none; }
+      .hamburger { display: flex; margin-left: auto; }
+      .nav__actions .icon-btn { display: grid; }
+
+      .announce { font-size: .75rem; padding: 8px 40px 8px 16px; flex-wrap: wrap; }
+
+      .hero__grid { grid-template-columns: 1fr; }
+      .trending { position: static; }
+      .featured__media { height: 280px; }
+      .featured__bottom h2 { font-size: 1.25rem; }
+      .featured__bottom p { display: none; }
+
+      .articles { grid-template-columns: 1fr; gap: 20px; }
+      .sabia { padding: 32px 24px; }
+      .sabia__grid { grid-template-columns: 1fr; gap: 14px; }
+
+      .stats__inner { grid-template-columns: repeat(2, 1fr); padding: 28px 24px; gap: 24px; }
+      .stat__num { font-size: 2rem; }
+
+      .newsletter { padding: 40px 24px; }
+      .newsletter__form { flex-direction: column; padding: 14px; }
+      .newsletter__form button { width: 100%; padding: 13px; }
+
+      .cat-strip { grid-template-columns: repeat(2, 1fr); }
+
+      .footer__top { grid-template-columns: 1fr 1fr; gap: 28px; }
+      .footer__brand { grid-column: 1 / -1; }
+
+      section { padding: 36px 0; }
+      .section-head__title { font-size: 1.4rem; }
+    }
+
+    @media (max-width: 480px) {
+      .footer__top { grid-template-columns: 1fr; }
+      .footer__bottom { flex-direction: column; align-items: flex-start; }
+      .cat-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ TOP DECORATIONS ═══ -->
+  <div class="top-line"></div>
+  <div class="reading-progress" id="readProgress"></div>
+
+  <!-- ═══ ANNOUNCEMENT BAR ═══ -->
+  <div class="announce" id="announce">
+    <span class="announce__pill">Novo</span>
+    <span>Receba notificações dos artigos mais importantes assim que forem publicados</span>
+    <a href="#" onclick="openModal(); return false;">Ativar notificações →</a>
+    <button class="announce__close" onclick="document.getElementById('announce').remove()" aria-label="Fechar">✕</button>
+  </div>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header" id="header">
+    <nav class="nav">
+      <div class="logo" onclick="showMain()">
+        <div class="logo__mark">C</div>
+        <div class="logo__text"><span>Curios</span><span>Tech</span></div>
+      </div>
+
+      <div class="nav__links" id="navLinks">
+        <a class="nav__link active" data-cat="all"     onclick="filterCategory('all', this)">Home</a>
+        <a class="nav__link"        data-cat="tech"    onclick="filterCategory('tech', this)">Tecnologia</a>
+        <a class="nav__link"        data-cat="curio"   onclick="filterCategory('curio', this)">Curiosidades</a>
+        <a class="nav__link"        data-cat="ai"      onclick="filterCategory('ai', this)">IA &amp; Futuro</a>
+        <a class="nav__link"        data-cat="gadgets" onclick="filterCategory('gadgets', this)">Gadgets</a>
+        <a class="nav__link"        data-cat="science" onclick="filterCategory('science', this)">Ciência</a>
+        <a class="nav__link"        data-cat="internet"onclick="filterCategory('internet', this)">Internet</a>
+      </div>
+
+      <div class="nav__actions">
+        <button class="icon-btn" onclick="openSearch()" aria-label="Buscar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+        </button>
+        <button class="btn btn--outline" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          Notificações
+        </button>
+        <button class="btn btn--primary" onclick="showSobre()">Sobre</button>
+      </div>
+
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a onclick="filterCategory('all'); closeMenu()">Home</a>
+    <a onclick="filterCategory('tech'); closeMenu()">Tecnologia</a>
+    <a onclick="filterCategory('curio'); closeMenu()">Curiosidades</a>
+    <a onclick="filterCategory('ai'); closeMenu()">IA &amp; Futuro</a>
+    <a onclick="filterCategory('gadgets'); closeMenu()">Gadgets</a>
+    <a onclick="filterCategory('science'); closeMenu()">Ciência</a>
+    <a onclick="filterCategory('internet'); closeMenu()">Internet</a>
+    <div class="mobile-nav__divider"></div>
+    <div class="mobile-nav__actions">
+      <button class="btn btn--outline" onclick="openModal(); closeMenu()">Notificações</button>
+      <button class="btn btn--primary" onclick="showSobre(); closeMenu()">Sobre</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero__intro reveal">
+          <div class="hero__eyebrow">
+            <span class="dot"></span>
+            Atualizado há poucos minutos
+          </div>
+          <h1>Curiosidade é o<br>combustível do <em>futuro</em>.</h1>
+          <p>Histórias de tecnologia, ciência e descobertas contadas com clareza, profundidade e aquele toque de surpresa que faz você querer compartilhar com alguém.</p>
+        </div>
+
+        <div class="hero__grid">
+
+          <!-- Featured -->
+          <article class="featured reveal" onclick="readArticle('pc-upgrades')">
+            <div class="featured__media">
+              <div class="ph-graphic">
+                <img src="Imagens/hardware.jpg" alt="Placa-mãe com chip iluminado em vermelho e azul" class="ph-img" loading="lazy" />
+              </div>
+              <div class="featured__overlay"></div>
+              <div class="featured__top">
+                <span class="badge badge-tech">Tecnologia</span>
+                <span class="live-tag">Em destaque</span>
+              </div>
+              <div class="featured__bottom">
+                <h2>7 acessórios e upgrades que valem cada centavo no seu PC em 2026</h2>
+                <p>Do SSD Kingston KC3000 e RAM DDR5 Kingston Fury Beast 32GB ao monitor LG UltraGear 27GP850 a 165Hz e teclado Keychron Q1 — testamos os componentes que mudam de verdade o dia a dia, com faixa de preço e onde comprar.</p>
+                <div class="featured__meta">
+                  <span>01 mai 2026</span>
+                  <div class="sep"></div>
+                  <span>8 min de leitura</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Trending -->
+          <aside class="trending reveal">
+            <div class="trending__head">
+              <div class="trending__title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                  <polyline points="16 7 22 7 22 13"/>
+                </svg>
+                Em Alta
+              </div>
+              <span class="meta">esta semana</span>
+            </div>
+
+            <div class="trend-item" onclick="readArticle('headsets')">
+              <div class="trend-num">01</div>
+              <div class="trend-content">
+                <span class="badge badge-gadgets">Gadgets</span>
+                <p>Headsets com cancelamento de ruído: o duelo Sony XM5 vs Bose QC Ultra</p>
+                <span class="views">👁 28.4k visualizações</span>
+              </div>
+            </div>
+
+            <div class="trend-item" onclick="readArticle('pc-upgrades')">
+              <div class="trend-num">02</div>
+              <div class="trend-content">
+                <span class="badge badge-tech">Tecnologia</span>
+                <p>DDR5 já caiu de preço: vale fazer upgrade em 2026?</p>
+                <span class="views">👁 21.7k visualizações</span>
+              </div>
+            </div>
+
+            <div class="trend-item" onclick="readArticle('celulares')">
+              <div class="trend-num">03</div>
+              <div class="trend-content">
+                <span class="badge badge-gadgets">Gadgets</span>
+                <p>Galaxy A55 lidera vendas de intermediários no Brasil pelo 3º mês</p>
+                <span class="views">👁 18.9k visualizações</span>
+              </div>
+            </div>
+
+            <div class="trend-item" onclick="readArticle('projetores')">
+              <div class="trend-num">04</div>
+              <div class="trend-content">
+                <span class="badge badge-tech">Tecnologia</span>
+                <p>Projetor laser ou LED: qual dura mais e vale mais a pena?</p>
+                <span class="views">👁 15.2k visualizações</span>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CATEGORIAS EM DESTAQUE ═══ -->
+    <section>
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__title">Explore por categoria</div>
+            <p class="section-head__sub">Seis universos para você se perder com curiosidade.</p>
+          </div>
+        </div>
+
+        <div class="cat-strip reveal">
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#2563eb,#4338ca);--cat-bg:#dbeafe" onclick="filterCategory('tech')">
+            <div class="cat-tile__icon">💻</div>
+            <div class="cat-tile__label">Tecnologia</div>
+            <div class="cat-tile__count">3 artigos</div>
+          </div>
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#10b981,#0d9488);--cat-bg:#d1fae5" onclick="filterCategory('curio')">
+            <div class="cat-tile__icon">🔍</div>
+            <div class="cat-tile__label">Curiosidades</div>
+            <div class="cat-tile__count">Em breve</div>
+          </div>
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#8b5cf6,#6d28d9);--cat-bg:#ede9fe" onclick="filterCategory('ai')">
+            <div class="cat-tile__icon">🤖</div>
+            <div class="cat-tile__label">IA &amp; Futuro</div>
+            <div class="cat-tile__count">Em breve</div>
+          </div>
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#f97316,#eab308);--cat-bg:#fef3c7" onclick="filterCategory('gadgets')">
+            <div class="cat-tile__icon">📱</div>
+            <div class="cat-tile__label">Gadgets</div>
+            <div class="cat-tile__count">3 artigos</div>
+          </div>
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#06b6d4,#38bdf8);--cat-bg:#cffafe" onclick="filterCategory('science')">
+            <div class="cat-tile__icon">🔬</div>
+            <div class="cat-tile__label">Ciência</div>
+            <div class="cat-tile__count">Em breve</div>
+          </div>
+          <div class="cat-tile" style="--cat:linear-gradient(90deg,#ec4899,#f43f5e);--cat-bg:#fce7f3" onclick="filterCategory('internet')">
+            <div class="cat-tile__icon">🌐</div>
+            <div class="cat-tile__label">Internet</div>
+            <div class="cat-tile__count">Em breve</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ ÚLTIMAS PUBLICAÇÕES ═══ -->
+    <section id="articles-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__title" id="section-label">Últimas publicações</div>
+            <p class="section-head__sub" id="section-subtitle">Reviews testadas, comparativos honestos e guias práticos para você gastar bem em 2026.</p>
+          </div>
+          <a href="#" class="section-head__link" onclick="event.preventDefault(); showToast('Mais artigos em breve!')">
+            Ver todos
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="articles" id="articlesGrid">
+
+          <!-- 02 — Acessórios e upgrades para PC -->
+          <article class="card reveal" data-cat="tech" onclick="readArticle('pc-upgrades')">
+            <div class="card__media">
+              <div class="ph-graphic">
+                <img src="Imagens/hardware.jpg" alt="Placa-mãe com chip iluminado em vermelho e azul" class="ph-img" loading="lazy" />
+              </div>
+              <span class="badge badge-tech">Tecnologia</span>
+              <button class="card__bookmark" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="card__body">
+              <h3>7 acessórios e upgrades que valem cada centavo no seu PC em 2026</h3>
+              <p>Do SSD Kingston KC3000 (1TB ~R$ 600) e RAM DDR5 Kingston Fury Beast 32GB ao monitor LG UltraGear 27GP850 a 165Hz, mouse Logitech G Pro X Superlight 2 e teclado Keychron Q1 — os componentes que mudam de verdade o dia a dia.</p>
+            </div>
+            <div class="card__foot">
+              <span class="card__date">01 mai 2026</span>
+              <div class="card__stats">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>8 min</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 03 — Celulares intermediários -->
+          <article class="card reveal" data-cat="gadgets" onclick="readArticle('celulares')">
+            <div class="card__media">
+              <div class="ph-graphic">
+                <img src="Imagens/celulares.jpg" alt="Smartphones azuis e pretos dispostos sobre superfície branca" class="ph-img" loading="lazy" />
+              </div>
+              <span class="badge badge-gadgets">Gadgets</span>
+              <button class="card__bookmark" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="card__body">
+              <h3>Os melhores celulares intermediários de 2026: 6 modelos que não vão te deixar na mão</h3>
+              <p>Galaxy A55, Poco X6 Pro, Moto G85, Redmi Note 13 Pro+, Nothing Phone (2a) e Pixel 8a — comparativo direto de câmera, bateria, processador, atualizações e durabilidade. O ponto-doce entre R$ 1.800 e R$ 2.800 nunca foi tão competitivo.</p>
+            </div>
+            <div class="card__foot">
+              <span class="card__date">30 abr 2026</span>
+              <div class="card__stats">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10 min</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 04 — Headsets -->
+          <article class="card reveal" data-cat="gadgets" onclick="readArticle('headsets')">
+            <div class="card__media">
+              <div class="ph-graphic">
+                <img src="Imagens/fone.jpg" alt="Headset preto sobre mesa com notebook ao fundo" class="ph-img" loading="lazy" />
+              </div>
+              <span class="badge badge-gadgets">Gadgets</span>
+              <button class="card__bookmark" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="card__body">
+              <h3>Os melhores headsets do momento: 7 modelos para trabalho, viagem e gaming</h3>
+              <p>Sony WH-1000XM5, Bose QuietComfort Ultra, Sennheiser Momentum 4, AirPods Max e os campeões em gaming HyperX Cloud III Wireless e SteelSeries Arctis Nova Pro Wireless. Testamos cada um e definimos quem leva em cada categoria.</p>
+            </div>
+            <div class="card__foot">
+              <span class="card__date">29 abr 2026</span>
+              <div class="card__stats">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7 min</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 05 — Projetores 2026 -->
+          <article class="card reveal" data-cat="tech" onclick="readArticle('projetores')">
+            <div class="card__media">
+              <div class="ph-graphic">
+                <img src="Imagens/Projetor.jpg" alt="Projetor portátil exibindo imagem de paisagem em parede" class="ph-img" loading="lazy" />
+              </div>
+              <span class="badge badge-tech">Tecnologia</span>
+              <button class="card__bookmark" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="card__body">
+              <h3>Os melhores projetores de 2026: 5 modelos que substituem sua TV com folga</h3>
+              <p>Da portabilidade do Anker Nebula Capsule 3 ao laser 4K do XGIMI Horizon Ultra, passando pelo BenQ X3100i para gamers, o Epson EpiqVision LS800 ultra-curto e o Hisense PX2-Pro. Comparamos brilho real (lúmens ANSI), foco automático e som integrado.</p>
+            </div>
+            <div class="card__foot">
+              <span class="card__date">28 abr 2026</span>
+              <div class="card__stats">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>8 min</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- 06 — Bonus: Guia de compra -->
+          <article class="card reveal" data-cat="tech" onclick="readArticle('checklist')">
+            <div class="card__media">
+              <div class="ph-graphic">
+                <img src="Imagens/Checklist.jpg" alt="Caneta marcando itens em uma lista de checklist" class="ph-img" loading="lazy" />
+              </div>
+              <span class="badge badge-tech">Tecnologia</span>
+              <button class="card__bookmark" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
+            </div>
+            <div class="card__body">
+              <h3>Antes de comprar tecnologia: o checklist de 8 perguntas que evita o arrependimento</h3>
+              <p>Garantia oficial no Brasil, prazo real de entrega, vendedor com selo no marketplace, política de devolução, atualizações de firmware e suporte em português — os fatores invisíveis que separam um produto que dura de uma dor de cabeça cara.</p>
+            </div>
+            <div class="card__foot">
+              <span class="card__date">27 abr 2026</span>
+              <div class="card__stats">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>5 min</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Empty state para categorias sem artigos -->
+        <div class="empty-state" id="emptyState" hidden>
+          <div class="empty-state__icon">📭</div>
+          <h3 id="emptyStateTitle">Em breve!</h3>
+          <p id="emptyStateMsg">Ainda não publicamos artigos nessa categoria, mas estamos preparando conteúdo novo. Cadastre seu e-mail e seja avisado em primeira mão.</p>
+          <div class="empty-state__actions">
+            <button class="btn btn--primary btn--lg" onclick="openModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              Quero ser notificado
+            </button>
+            <button class="btn btn--outline btn--lg" onclick="filterCategory('all')">
+              Ver todos os artigos
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SABIA QUE...? ═══ -->
+    <section>
+      <div class="container">
+        <div class="sabia reveal">
+          <div class="sabia__head">
+            <div class="sabia__icon">⚡</div>
+            <h2>Sabia que...?</h2>
+          </div>
+          <p class="sabia__sub">Curiosidades rápidas para você compartilhar no próximo café.</p>
+
+          <div class="sabia__grid">
+            <div class="sabia__item">
+              <div class="icon">🖨️</div>
+              <p>A <strong>primeira impressora 3D foi patenteada em 1986 por Charles Hull</strong> — a tecnologia se chamava Estereolitografia (SLA) e demorou quase 20 anos até virar acessível ao consumidor.</p>
+            </div>
+            <div class="sabia__item">
+              <div class="icon">📱</div>
+              <p>O <strong>Brasil é o 4º maior consumidor de smartphones do mundo</strong>, atrás apenas de China, Índia e Estados Unidos — com mais de 240 milhões de aparelhos ativos.</p>
+            </div>
+            <div class="sabia__item">
+              <div class="icon">📽️</div>
+              <p>Projetores laser modernos têm <strong>vida útil de até 30.000 horas</strong> — o equivalente a assistir 4 horas por dia durante mais de 20 anos sem trocar a fonte de luz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ NEWSLETTER ═══ -->
+    <section>
+      <div class="container">
+        <div class="newsletter reveal">
+          <div class="newsletter__inner">
+            <div class="newsletter__icon">🔔</div>
+            <h2>Adicione seu e-mail e receba notificações</h2>
+            <p>Cadastre seu e-mail abaixo e seja avisado em primeira mão sempre que publicarmos um novo artigo, descoberta científica ou review de gadget. <strong style="color:#e2e8f0">Você decide a frequência.</strong></p>
+            <form class="newsletter__form" onsubmit="handleInlineSubmit(event)">
+              <input type="email" placeholder="Digite seu e-mail" required />
+              <button type="submit">Ativar notificações</button>
+            </form>
+            <div class="newsletter__perks">
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Alertas em tempo real</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Desativar em 1 clique</span>
+              <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sem spam, prometido</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ ARTICLE PAGE (post-click) ═══ -->
+  <div id="article-page">
+    <div class="article">
+      <button class="article__back" onclick="closeArticle()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M13 8H3M7 4 3 8l4 4"/>
+        </svg>
+        Voltar para o portal
+      </button>
+
+      <div class="article__category" id="articleCategory"></div>
+      <h1 class="article__title" id="articleTitle"></h1>
+      <p class="article__lede" id="articleLede"></p>
+
+      <div class="article__meta">
+        <span id="articleDate"></span>
+        <div class="sep"></div>
+        <span id="articleReadTime"></span>
+        <div class="share-btns">
+          <a class="share-btn" onclick="showToast('Link copiado!')" aria-label="Compartilhar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </a>
+          <a class="share-btn" onclick="toggleBookmark(event, this)" aria-label="Salvar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="article__hero" id="articleHero"></div>
+
+      <div class="article__body" id="articleBody"></div>
+
+      <div class="article__end-cta">
+        <h3>Gostou desse conteúdo?</h3>
+        <p>Cadastre seu e-mail e receba notificações quando publicarmos novos artigos como esse.</p>
+        <button class="btn btn--primary btn--lg" onclick="openModal()">Ativar notificações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SOBRE PAGE ═══ -->
+  <div id="sobre-page">
+    <div class="sobre">
+      <button class="sobre__back" onclick="showMain()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M13 8H3M7 4 3 8l4 4"/>
+        </svg>
+        Voltar para o portal
+      </button>
+
+      <h1>O portal que transforma curiosidade em conhecimento.</h1>
+      <p class="sobre__lede">O CuriosTech nasceu de uma convicção simples: entender tecnologia não deveria exigir um diploma em Ciência da Computação. Somos um portal independente que cobre o universo digital com profundidade, honestidade e aquele toque de curiosidade que faz a diferença.</p>
+
+      <h2>Nossa missão</h2>
+      <p>Tornar o complexo <strong>compreensível</strong>, sem perder rigor. Acreditamos que jornalismo de tecnologia bem feito é aquele que respeita a inteligência do leitor — explicando o "como" e o "por quê" sem cair em jargões nem em simplificações enganosas.</p>
+
+      <h2>Como trabalhamos</h2>
+      <p>Cada artigo passa por <strong>revisão técnica e editorial</strong> antes de ser publicado. Quando recomendamos um produto ou tomamos posição sobre uma controvérsia, deixamos claros nossos critérios. Não publicamos releases disfarçados de matéria, e nossas reviews são feitas com produtos comprados ou emprestados — nunca presenteados.</p>
+
+      <h2>Quem somos</h2>
+      <p>Uma redação de <strong>48 colaboradores</strong> entre jornalistas, engenheiros, cientistas e ilustradores espalhados por 11 cidades. Nossa equipe combina background técnico com paixão por contar histórias — porque a tecnologia mais importante é aquela que muda vidas, e isso só faz sentido quando alguém para e explica.</p>
+
+      <h2>Independência editorial</h2>
+      <p>Somos sustentados por <strong>assinaturas e notificações por e-mail</strong>. Não aceitamos publi-editoriais nem temos investidores corporativos. Quando há conflito de interesse potencial, revelamos abertamente. É a única forma de manter a confiança dos nossos leitores.</p>
+
+      <h2>Fale com a gente</h2>
+      <p>Tem uma sugestão de pauta, encontrou um erro ou quer escrever para nós? Mande um e-mail para <strong>contato@curiostech.com.br</strong>. Lemos tudo — e respondemos a maioria.</p>
+
+      <button class="btn btn--primary btn--lg" onclick="showMain()" style="margin-top: 24px;">
+        ← Voltar para o portal
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <div class="logo">
+            <div class="logo__mark">C</div>
+            <div class="logo__text"><span>Curios</span><span>Tech</span></div>
+          </div>
+          <p>Tecnologia, ciência e curiosidades explicadas de forma clara, honesta e sem jargões. O portal de referência no universo digital — feito por quem é curioso, para quem é curioso.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg></a>
+            <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="#" aria-label="RSS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <h4>Categorias</h4>
+          <ul>
+            <li><a onclick="filterCategory('tech')">Tecnologia</a></li>
+            <li><a onclick="filterCategory('curio')">Curiosidades</a></li>
+            <li><a onclick="filterCategory('ai')">IA &amp; Futuro</a></li>
+            <li><a onclick="filterCategory('gadgets')">Gadgets</a></li>
+            <li><a onclick="filterCategory('science')">Ciência</a></li>
+            <li><a onclick="filterCategory('internet')">Internet</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Portal</h4>
+          <ul>
+            <li><a onclick="showSobre()">Sobre nós</a></li>
+            <li><a onclick="openModal()">Notificações</a></li>
+            <li><a href="#">Editorial</a></li>
+            <li><a href="#">Carreiras</a></li>
+            <li><a href="#">Imprensa</a></li>
+            <li><a href="#">Anuncie</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Política de Privacidade</a></li>
+            <li><a href="#">Termos de Uso</a></li>
+            <li><a href="#">Cookies</a></li>
+            <li><a href="#">Código editorial</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2025 CuriosTech. Todos os direitos reservados.</p>
+        <p>Feito com <span class="heart">♥</span> para quem é curioso de verdade.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ MODAL ═══ -->
+  <div class="overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <button class="modal__close" onclick="closeModal()" aria-label="Fechar">✕</button>
+      <div class="modal__icon">🔔</div>
+      <h3>Ative suas notificações</h3>
+      <p>Adicione seu e-mail e seja notificado assim que publicarmos novos artigos de tecnologia, IA e curiosidades. Você escolhe o que recebe.</p>
+      <form class="modal__form" onsubmit="handleNewsletterSubmit(event)">
+        <input type="text" placeholder="Seu nome" required />
+        <input type="email" placeholder="Digite seu e-mail" required />
+        <button type="submit">Ativar notificações →</button>
+      </form>
+      <p class="modal__note">Desative quando quiser, em um clique. Sem letras miúdas.</p>
+    </div>
+  </div>
+
+  <!-- ═══ SCROLL TO TOP ═══ -->
+  <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    <span id="toastMsg">Olá!</span>
+  </div>
+
+  <script>
+  /* ═══════════════════════════════════════════════════
+     APP — single self-contained module
+  ═══════════════════════════════════════════════════ */
+  (() => {
+    'use strict';
+
+    /* ─── Cached DOM references ─── */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+    const els = {
+      header:       $('#header'),
+      progress:     $('#readProgress'),
+      scrollBtn:    $('#scrollTop'),
+      hamburger:    $('#hamburger'),
+      mobileNav:    $('#mobileNav'),
+      navLinks:     $$('#navLinks .nav__link'),
+      grid:         $('#articlesGrid'),
+      cards:        $$('#articlesGrid .card'),
+      sectionLabel: $('#section-label'),
+      sectionSub:   $('#section-subtitle'),
+      emptyState:   $('#emptyState'),
+      emptyTitle:   $('#emptyStateTitle'),
+      emptyMsg:     $('#emptyStateMsg'),
+      overlay:      $('#modalOverlay'),
+      mainContent:  $('#main-content'),
+      sobrePage:    $('#sobre-page'),
+      toast:        $('#toast'),
+      toastMsg:     $('#toastMsg'),
+    };
+
+    /* ─── Category labels ─── */
+    const CATEGORIES = {
+      all:      { label: 'Últimas publicações',  sub: 'Reviews testadas, comparativos honestos e guias práticos para você gastar bem em 2026.' },
+      tech:     { label: 'Tecnologia',           sub: 'Hardware, software e tudo que move o mundo digital.' },
+      curio:    { label: 'Curiosidades',         sub: 'Histórias surpreendentes que você não sabia que precisava.' },
+      ai:       { label: 'IA & Futuro',          sub: 'Inteligência artificial e os caminhos do amanhã.' },
+      gadgets:  { label: 'Gadgets',              sub: 'Reviews, lançamentos e o que vale a pena comprar.' },
+      science:  { label: 'Ciência',              sub: 'Descobertas, pesquisas e o avanço do conhecimento humano.' },
+      internet: { label: 'Internet',             sub: 'A rede que conecta tudo — e como ela continua mudando.' },
+    };
+
+    /* ─── Scroll behaviors (header, progress, scroll-top) ─── */
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        els.header.classList.toggle('scrolled', y > 8);
+        els.scrollBtn.classList.toggle('visible', y > 400);
+        els.progress.style.width = docH > 0 ? `${(y / docH) * 100}%` : '0%';
+        ticking = false;
+      });
+      ticking = true;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* ─── Smooth scroll-to-top ─── */
+    window.scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    /* ─── Hamburger menu ─── */
+    window.toggleMenu = () => {
+      const isOpen = !els.hamburger.classList.contains('open');
+      els.hamburger.classList.toggle('open', isOpen);
+      els.mobileNav.classList.toggle('open', isOpen);
+    };
+    window.closeMenu = () => {
+      els.hamburger.classList.remove('open');
+      els.mobileNav.classList.remove('open');
+    };
+    document.addEventListener('click', (e) => {
+      if (!els.header.contains(e.target) && !els.mobileNav.contains(e.target)) {
+        window.closeMenu();
+      }
+    });
+
+    /* ─── Filter by category ─── */
+    window.filterCategory = (cat, linkEl) => {
+      window.showMain();
+
+      // Active state
+      els.navLinks.forEach(a => {
+        a.classList.toggle('active', a.dataset.cat === cat);
+      });
+      if (linkEl && linkEl.classList.contains('nav__link')) {
+        els.navLinks.forEach(a => a.classList.remove('active'));
+        linkEl.classList.add('active');
+      }
+
+      // Update labels
+      const meta = CATEGORIES[cat] || CATEGORIES.all;
+      els.sectionLabel.textContent = meta.label;
+      els.sectionSub.textContent   = meta.sub;
+
+      // Filter cards
+      let visibleCount = 0;
+      els.cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        if (show) visibleCount++;
+        card.style.display = show ? 'flex' : 'none';
+      });
+
+      // Show empty state if no articles match
+      if (visibleCount === 0 && cat !== 'all') {
+        els.emptyState.hidden = false;
+        els.emptyTitle.textContent = `Em breve em ${meta.label}!`;
+        els.emptyMsg.textContent = `Ainda não publicamos artigos sobre ${meta.label.toLowerCase()}, mas estamos preparando conteúdo novo. Cadastre seu e-mail e seja avisado em primeira mão.`;
+      } else {
+        els.emptyState.hidden = true;
+      }
+
+      // Scroll to articles section + toast feedback
+      if (cat !== 'all') {
+        setTimeout(() => {
+          $('#articles-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 60);
+        if (visibleCount > 0) {
+          showToast(`${visibleCount} ${visibleCount === 1 ? 'artigo encontrado' : 'artigos encontrados'} em ${meta.label}`);
+        } else {
+          showToast(`Nenhum artigo em ${meta.label} ainda — cadastre seu e-mail!`);
+        }
+      }
+    };
+
+    /* ─── Modal ─── */
+    window.openModal = () => {
+      els.overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    window.closeModal = () => {
+      els.overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    window.handleOverlayClick = (e) => {
+      if (e.target === els.overlay) window.closeModal();
+    };
+    window.handleNewsletterSubmit = (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = '✓ Inscrito com sucesso!';
+      btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+      btn.disabled = true;
+      setTimeout(() => {
+        window.closeModal();
+        e.target.reset();
+        btn.textContent = 'Quero receber →';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 1800);
+    };
+
+    /* ─── Inline newsletter ─── */
+    window.handleInlineSubmit = (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const original = btn.textContent;
+      btn.textContent = '✓ Inscrito!';
+      btn.disabled = true;
+      e.target.reset();
+      showToast('Pronto! Confira seu e-mail para confirmar.');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 2400);
+    };
+
+    /* ─── Sobre / Main toggle ─── */
+    window.showSobre = () => {
+      els.mainContent.style.display = 'none';
+      els.sobrePage.classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+    window.showMain = () => {
+      els.sobrePage.classList.remove('visible');
+      articlePage.classList.remove('visible');
+      els.mainContent.style.display = '';
+      els.navLinks.forEach((a, i) => a.classList.toggle('active', i === 0));
+      els.sectionLabel.textContent = CATEGORIES.all.label;
+      els.sectionSub.textContent   = CATEGORIES.all.sub;
+      els.cards.forEach(c => c.style.display = 'flex');
+      if (els.emptyState) els.emptyState.hidden = true;
+    };
+
+    /* ─── Bookmark toggle ─── */
+    window.toggleBookmark = (e, btn) => {
+      e.stopPropagation();
+      const isSaved = btn.classList.toggle('saved');
+      showToast(isSaved ? '✓ Artigo salvo na sua lista' : 'Artigo removido da lista');
+    };
+
+    /* ─── Article content database ─── */
+    const ARTICLES = {
+      'pc-upgrades': {
+        category: 'tech',
+        categoryLabel: 'Tecnologia',
+        title: '7 acessórios e upgrades que valem cada centavo no seu PC em 2026',
+        lede: 'Não é todo upgrade que se justifica. Reunimos os componentes que realmente fazem diferença no dia a dia — com preços reais praticados no Brasil, alternativas para cada bolso e o que evitar.',
+        date: '01 mai 2026',
+        readTime: '8 min de leitura',
+        image: 'Imagens/hardware.jpg',
+        body: `
+          <p>Depois de meses testando componentes em duas bancadas (uma com Ryzen 7 7700X e outra com Intel Core i5-14600K), separamos os 7 upgrades que entregam o maior salto de produtividade e qualidade de vida por real investido. Esqueça o "tudo top de linha" — aqui vai o caminho real.</p>
+
+          <h2>1. SSD NVMe Gen 4: o upgrade mais subestimado</h2>
+          <p>Se você ainda usa SSD SATA ou, pior, HDD, esse é o primeiro passo. Tempos de boot, abertura de programas pesados e carregamento de jogos despencam.</p>
+          <div class="product-card">
+            <div class="product-card__icon">💾</div>
+            <div>
+              <div class="product-card__name">Kingston KC3000 1TB</div>
+              <p class="product-card__desc">Leitura 7.000 MB/s • PCIe 4.0 • 5 anos de garantia</p>
+            </div>
+            <div class="product-card__price">~R$ 600</div>
+          </div>
+          <p>Alternativa mais barata: <strong>WD Blue SN580 1TB</strong> (~R$ 470), suficiente para 90% dos usuários.</p>
+
+          <h2>2. Memória RAM DDR5 32GB</h2>
+          <p>Com Chrome consumindo cada vez mais RAM e jogos modernos pedindo 16GB só pra rodar bem, 32GB virou o novo padrão confortável.</p>
+          <div class="product-card">
+            <div class="product-card__icon">🧠</div>
+            <div>
+              <div class="product-card__name">Kingston Fury Beast DDR5 32GB (2x16) 6000 MHz</div>
+              <p class="product-card__desc">CL30 • XMP / EXPO • RGB opcional</p>
+            </div>
+            <div class="product-card__price">~R$ 780</div>
+          </div>
+
+          <h2>3. Monitor 1440p 165Hz</h2>
+          <p>Pular de 1080p 60Hz para 1440p 165Hz é o upgrade visual mais transformador que existe — vale mais do que trocar de GPU.</p>
+          <div class="product-card">
+            <div class="product-card__icon">🖥️</div>
+            <div>
+              <div class="product-card__name">LG UltraGear 27GP850-B</div>
+              <p class="product-card__desc">27" • IPS Nano • 1440p @ 165Hz • G-Sync compatível</p>
+            </div>
+            <div class="product-card__price">~R$ 2.400</div>
+          </div>
+
+          <h2>4. Mouse wireless leve</h2>
+          <p>Quem usa o computador por horas sente o impacto de um mouse leve e bem ajustado. Não precisa ser gamer pra perceber.</p>
+          <div class="product-card">
+            <div class="product-card__icon">🖱️</div>
+            <div>
+              <div class="product-card__name">Logitech G Pro X Superlight 2</div>
+              <p class="product-card__desc">60g • Sensor HERO 2 • Bateria 95h</p>
+            </div>
+            <div class="product-card__price">~R$ 1.200</div>
+          </div>
+
+          <h2>5. Teclado mecânico com layout ABNT2</h2>
+          <p>A diferença entre um teclado genérico e um bom mecânico é diária — você sente nos dedos depois de uma hora digitando.</p>
+          <div class="product-card">
+            <div class="product-card__icon">⌨️</div>
+            <div>
+              <div class="product-card__name">Keychron Q1 V2 (ABNT2)</div>
+              <p class="product-card__desc">75% • Hot-swap • Estrutura de alumínio • USB-C</p>
+            </div>
+            <div class="product-card__price">~R$ 1.500</div>
+          </div>
+
+          <h2>6. Webcam decente para reuniões</h2>
+          <p>Se você ainda usa a webcam embutida do notebook ou aquela genérica de 720p, sua imagem está sabotando suas reuniões.</p>
+          <div class="product-card">
+            <div class="product-card__icon">📹</div>
+            <div>
+              <div class="product-card__name">Logitech Brio 500</div>
+              <p class="product-card__desc">1080p @ 60fps • Autoenquadramento • USB-C</p>
+            </div>
+            <div class="product-card__price">~R$ 900</div>
+          </div>
+
+          <h2>7. Hub USB-C com Power Delivery</h2>
+          <p>Pra quem trabalha com notebook + monitor externo, um bom hub elimina cabos e simplifica a estação.</p>
+          <div class="product-card">
+            <div class="product-card__icon">🔌</div>
+            <div>
+              <div class="product-card__name">Anker 555 USB-C Hub (8-in-1)</div>
+              <p class="product-card__desc">HDMI 4K • Ethernet • 100W PD • 2 USB-A 3.0</p>
+            </div>
+            <div class="product-card__price">~R$ 450</div>
+          </div>
+
+          <h2>O que NÃO recomendamos</h2>
+          <ul>
+            <li><strong>RAM acima de 6400 MHz no AM5:</strong> o ganho real vs. preço não compensa para uso geral.</li>
+            <li><strong>SSD PCIe 5.0:</strong> 95% das tarefas não saturam o Gen 4. Pague menos, leve a Gen 4.</li>
+            <li><strong>Mouse de 26.000 DPI:</strong> número de marketing. Acima de 3.200 DPI ninguém percebe.</li>
+          </ul>
+
+          <blockquote>O segredo de um setup que dura: priorize componentes que você toca todos os dias (monitor, teclado, mouse) antes de obsessões com benchmark sintético.</blockquote>
+
+          <p>Conclusão: com investimento total de aproximadamente <strong>R$ 7.800</strong> nos sete itens (você pode parcelar/escalonar ao longo de meses), seu setup salta vários níveis. E todos esses produtos têm garantia oficial no Brasil — fator que merece um artigo à parte.</p>
+        `
+      },
+
+      'celulares': {
+        category: 'gadgets',
+        categoryLabel: 'Gadgets',
+        title: 'Os melhores celulares intermediários de 2026: 6 modelos que não vão te deixar na mão',
+        lede: 'O ponto-doce entre R$ 1.800 e R$ 2.800 nunca foi tão competitivo. Testamos os 6 modelos mais comprados do Brasil em câmera, bateria, atualizações e durabilidade real.',
+        date: '30 abr 2026',
+        readTime: '10 min de leitura',
+        image: 'Imagens/celulares.jpg',
+        body: `
+          <p>"Intermediário" parou de ser sinônimo de concessão. Os modelos abaixo entregam câmera principal de qualidade, bateria que passa do dia, atualizações por anos e construção que aguenta o tranco — sem o preço de flagship.</p>
+
+          <h2>1. Samsung Galaxy A55 5G</h2>
+          <p>O <strong>rei das vendas no Brasil há três meses consecutivos</strong>. Tela Super AMOLED de 6.6" 120Hz, processador Exynos 1480 e <strong>4 anos de atualizações de Android + 5 anos de patches de segurança</strong> — algo raríssimo nessa faixa.</p>
+          <div class="product-card">
+            <div class="product-card__icon">📱</div>
+            <div>
+              <div class="product-card__name">Galaxy A55 5G 8/256GB</div>
+              <p class="product-card__desc">Câmera 50MP OIS • Bateria 5.000 mAh • IP67</p>
+            </div>
+            <div class="product-card__price">~R$ 2.499</div>
+          </div>
+
+          <h2>2. Google Pixel 8a</h2>
+          <p>Câmera de smartphone top de linha em corpo intermediário. O processamento computacional do Tensor G3 entrega fotos que envergonham aparelhos duas vezes mais caros.</p>
+          <div class="product-card">
+            <div class="product-card__icon">📷</div>
+            <div>
+              <div class="product-card__name">Pixel 8a 8/128GB</div>
+              <p class="product-card__desc">Tensor G3 • 7 anos de atualizações • IP67</p>
+            </div>
+            <div class="product-card__price">~R$ 2.799</div>
+          </div>
+
+          <h2>3. Xiaomi Poco X6 Pro 5G</h2>
+          <p>Para quem quer <strong>performance pura</strong>. O Dimensity 8300 Ultra entrega benchmark de flagship por menos da metade do preço.</p>
+          <div class="product-card">
+            <div class="product-card__icon">⚡</div>
+            <div>
+              <div class="product-card__name">Poco X6 Pro 12/512GB</div>
+              <p class="product-card__desc">AMOLED 120Hz • 67W turbo • Dimensity 8300 Ultra</p>
+            </div>
+            <div class="product-card__price">~R$ 2.299</div>
+          </div>
+
+          <h2>4. Motorola Moto G85 5G</h2>
+          <p>Aposta da Motorola em design com tela curva — coisa de top de linha. Construção sólida e MyUX limpa, sem bloatware.</p>
+          <div class="product-card">
+            <div class="product-card__icon">📲</div>
+            <div>
+              <div class="product-card__name">Moto G85 5G 12/256GB</div>
+              <p class="product-card__desc">pOLED curva 120Hz • Snapdragon 6s Gen 3 • IP54</p>
+            </div>
+            <div class="product-card__price">~R$ 2.099</div>
+          </div>
+
+          <h2>5. Xiaomi Redmi Note 13 Pro+ 5G</h2>
+          <p>Câmera de 200MP que realmente entrega — e carregamento de 120W que enche a bateria em 19 minutos.</p>
+          <div class="product-card">
+            <div class="product-card__icon">🔋</div>
+            <div>
+              <div class="product-card__name">Redmi Note 13 Pro+ 8/256GB</div>
+              <p class="product-card__desc">Câmera 200MP OIS • 120W • IP68</p>
+            </div>
+            <div class="product-card__price">~R$ 2.599</div>
+          </div>
+
+          <h2>6. Nothing Phone (2a)</h2>
+          <p>O design mais ousado da lista, com a interface Glyph que pisca atrás. Nothing OS é a UI mais limpa do mercado Android atual.</p>
+          <div class="product-card">
+            <div class="product-card__icon">✨</div>
+            <div>
+              <div class="product-card__name">Nothing Phone (2a) 12/256GB</div>
+              <p class="product-card__desc">AMOLED 120Hz • Dimensity 7200 Pro • Glyph LEDs</p>
+            </div>
+            <div class="product-card__price">~R$ 2.399</div>
+          </div>
+
+          <h2>Qual escolher?</h2>
+          <ul>
+            <li><strong>Para câmera:</strong> Pixel 8a</li>
+            <li><strong>Para performance:</strong> Poco X6 Pro</li>
+            <li><strong>Para longevidade:</strong> Galaxy A55 (4+5 anos de updates)</li>
+            <li><strong>Para design:</strong> Nothing Phone (2a) ou Moto G85</li>
+            <li><strong>Para carregamento rápido e câmera de muito MP:</strong> Redmi Note 13 Pro+</li>
+          </ul>
+
+          <blockquote>Em 2026, comprar intermediário não é fazer concessão — é fazer matemática. Você economiza R$ 3.000 a R$ 5.000 vs. um flagship com apenas 10–15% menos performance no uso real.</blockquote>
+        `
+      },
+
+      'headsets': {
+        category: 'gadgets',
+        categoryLabel: 'Gadgets',
+        title: 'Os melhores headsets do momento: 7 modelos para trabalho, viagem e gaming',
+        lede: 'Cancelamento de ruído ativo virou commodity, mas a diferença está nos detalhes: drivers, conforto em uso prolongado, codec Bluetooth e firmware. Testamos os 7 modelos mais buscados.',
+        date: '29 abr 2026',
+        readTime: '7 min de leitura',
+        image: 'Imagens/fone.jpg',
+        body: `
+          <p>Usar headset por 8h no escritório, 14h num voo internacional ou 4h numa sessão de jogo são contextos diferentes. Aqui estão os campeões em cada situação — todos testados por pelo menos 2 semanas.</p>
+
+          <h2>Categoria 1: Cancelamento de ruído premium</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🎧</div>
+            <div>
+              <div class="product-card__name">Sony WH-1000XM5</div>
+              <p class="product-card__desc">ANC líder de mercado • 30h de bateria • LDAC</p>
+            </div>
+            <div class="product-card__price">~R$ 2.400</div>
+          </div>
+          <p>Continua sendo a <strong>referência absoluta em ANC</strong>. A separação de vozes e ambiente é praticamente cirúrgica. App da Sony permite tunar o EQ com precisão.</p>
+
+          <div class="product-card">
+            <div class="product-card__icon">🎧</div>
+            <div>
+              <div class="product-card__name">Bose QuietComfort Ultra</div>
+              <p class="product-card__desc">Imersão espacial • Conforto inigualável • aptX Adaptive</p>
+            </div>
+            <div class="product-card__price">~R$ 3.200</div>
+          </div>
+          <p>Conforto que parece <strong>nuvem grudada na orelha</strong>. ANC ligeiramente atrás do Sony em ônibus barulhento, mas vence no ruído contínuo de avião.</p>
+
+          <h2>Categoria 2: Áudio premium para audiófilo</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🎼</div>
+            <div>
+              <div class="product-card__name">Sennheiser Momentum 4 Wireless</div>
+              <p class="product-card__desc">60h de bateria • Drivers 42mm • aptX Adaptive</p>
+            </div>
+            <div class="product-card__price">~R$ 2.700</div>
+          </div>
+          <p>Som mais natural e equilibrado da lista. Bateria de 60h é absurda — você esquece o que é carregar.</p>
+
+          <div class="product-card">
+            <div class="product-card__icon">🍎</div>
+            <div>
+              <div class="product-card__name">Apple AirPods Max</div>
+              <p class="product-card__desc">Áudio espacial dinâmico • Construção em alumínio • H1 chip</p>
+            </div>
+            <div class="product-card__price">~R$ 4.500</div>
+          </div>
+          <p>Apenas para quem está no ecossistema Apple. Áudio espacial com tracking de cabeça é mágico em filmes.</p>
+
+          <h2>Categoria 3: Gaming sem fio</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🎮</div>
+            <div>
+              <div class="product-card__name">HyperX Cloud III Wireless</div>
+              <p class="product-card__desc">120h de bateria • Drivers 53mm • DTS Headphone:X</p>
+            </div>
+            <div class="product-card__price">~R$ 1.300</div>
+          </div>
+          <p>Custo-benefício imbatível. Mic com qualidade decente, bateria que dura uma semana inteira de uso.</p>
+
+          <div class="product-card">
+            <div class="product-card__icon">🎮</div>
+            <div>
+              <div class="product-card__name">SteelSeries Arctis Nova Pro Wireless</div>
+              <p class="product-card__desc">Hot-swap de bateria • ANC ativo • Dock OLED</p>
+            </div>
+            <div class="product-card__price">~R$ 3.000</div>
+          </div>
+          <p>Único da lista com <strong>baterias trocáveis a quente</strong> — sempre uma carregando no dock. Premium em tudo.</p>
+
+          <h2>Categoria 4: Custo-benefício</h2>
+          <div class="product-card">
+            <div class="product-card__icon">💰</div>
+            <div>
+              <div class="product-card__name">Anker Soundcore Space One</div>
+              <p class="product-card__desc">ANC adaptativo • 55h bateria • LDAC</p>
+            </div>
+            <div class="product-card__price">~R$ 700</div>
+          </div>
+          <p>Surpreendente. ANC chega em <strong>80% do Sony XM5 pagando 1/3 do preço</strong>. Veredito: para quem é primeiro fone over-ear, comece aqui.</p>
+
+          <h2>Recomendação final</h2>
+          <ul>
+            <li><strong>Trabalho em escritório / viagens:</strong> Sony WH-1000XM5</li>
+            <li><strong>Áudio puro / audiofilia:</strong> Sennheiser Momentum 4</li>
+            <li><strong>Gaming:</strong> HyperX Cloud III (econômico) ou Arctis Nova Pro (premium)</li>
+            <li><strong>Primeiro fone bom:</strong> Anker Soundcore Space One</li>
+          </ul>
+        `
+      },
+
+      'projetores': {
+        category: 'tech',
+        categoryLabel: 'Tecnologia',
+        title: 'Os melhores projetores de 2026: 5 modelos que substituem sua TV com folga',
+        lede: 'Projetores deixaram de ser gambiarra. Os modelos abaixo entregam imagem comparável a TVs OLED de 75", com instalação simples e por preços que finalmente fazem sentido.',
+        date: '28 abr 2026',
+        readTime: '8 min de leitura',
+        image: 'Imagens/Projetor.jpg',
+        body: `
+          <p>Para escolher um projetor sem erro, três números importam mais do que tudo: <strong>lúmens ANSI</strong> (brilho real), <strong>resolução nativa</strong> (não interpolada) e <strong>razão de projeção</strong> (qual a distância para qual tamanho de imagem). Os 5 abaixo passaram no nosso filtro.</p>
+
+          <h2>1. XGIMI Horizon Ultra — o melhor geral</h2>
+          <div class="product-card">
+            <div class="product-card__icon">📽️</div>
+            <div>
+              <div class="product-card__name">XGIMI Horizon Ultra</div>
+              <p class="product-card__desc">4K nativo • Laser híbrido • 2.300 ISO lumens • Dolby Vision</p>
+            </div>
+            <div class="product-card__price">~R$ 11.500</div>
+          </div>
+          <p>Único projetor doméstico com <strong>Dolby Vision</strong>. Combinação de laser + LED entrega cores impossíveis em projetores LED puros. Android TV integrado, foco automático em 1.5 segundo.</p>
+
+          <h2>2. Anker Nebula Capsule 3 — portátil rei</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🎒</div>
+            <div>
+              <div class="product-card__name">Anker Nebula Capsule 3 Laser</div>
+              <p class="product-card__desc">1080p • 300 ANSI lumens • 2.5h de bateria • Tamanho de lata de refri</p>
+            </div>
+            <div class="product-card__price">~R$ 3.800</div>
+          </div>
+          <p>Cabe na mochila. Bateria interna te permite levar para o quintal, camping ou churrasco. Não tem brilho pra ambientes claros, mas no escuro entrega 100".</p>
+
+          <h2>3. BenQ X3100i — gaming sério</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🎮</div>
+            <div>
+              <div class="product-card__name">BenQ X3100i</div>
+              <p class="product-card__desc">4K • 4LED • 3.300 lumens • Input lag 4ms @ 1080p 240Hz</p>
+            </div>
+            <div class="product-card__price">~R$ 14.000</div>
+          </div>
+          <p><strong>Input lag de 4ms</strong> a 1080p/240Hz é um número que humilha muitos monitores. Para quem joga competitivo em tela grande, é a única opção séria.</p>
+
+          <h2>4. Epson EpiqVision LS800 — ultracurto premium</h2>
+          <div class="product-card">
+            <div class="product-card__icon">🏠</div>
+            <div>
+              <div class="product-card__name">Epson EpiqVision LS800</div>
+              <p class="product-card__desc">4K PRO-UHD • Laser • 4.000 lumens • UST (encosta na parede)</p>
+            </div>
+            <div class="product-card__price">~R$ 24.000</div>
+          </div>
+          <p>Projetor de tiro ultracurto: encosta na parede e projeta <strong>120" a 25cm de distância</strong>. Substitui TV com folga, com som Yamaha integrado.</p>
+
+          <h2>5. Hisense PX2-Pro — alternativa ultracurto</h2>
+          <div class="product-card">
+            <div class="product-card__icon">📺</div>
+            <div>
+              <div class="product-card__name">Hisense PX2-Pro Laser TriChroma</div>
+              <p class="product-card__desc">4K • Laser RGB triplo • 2.400 lumens • 107% BT.2020</p>
+            </div>
+            <div class="product-card__price">~R$ 16.500</div>
+          </div>
+          <p>Cobertura de cor maior que muitas TVs OLED. Sweet spot custo-benefício para quem quer ultracurto sem chegar nos R$ 24k do Epson.</p>
+
+          <h2>Laser ou LED: qual dura mais?</h2>
+          <p>Projetores LED duram aproximadamente <strong>20.000 horas</strong>. Modelos a laser chegam a <strong>30.000 horas</strong>. Em ambos os casos, isso significa 20+ anos de uso doméstico normal. A diferença real está no brilho — laser entrega mais lúmens e mantém constância maior ao longo da vida útil.</p>
+
+          <blockquote>Para ambiente com luz controlada, qualquer um da lista funciona. Para sala com janela grande sem cortinas blackout, considere apenas Epson LS800 ou BenQ X3100i.</blockquote>
+
+          <h2>Não esqueça da tela</h2>
+          <p>Você pode até começar projetando em parede branca, mas <strong>uma tela ALR (Ambient Light Rejecting) entre R$ 800 e R$ 2.500 dobra a qualidade percebida da imagem</strong>. É o acessório mais subestimado dessa categoria.</p>
+        `
+      },
+
+      'checklist': {
+        category: 'tech',
+        categoryLabel: 'Tecnologia',
+        title: 'Antes de comprar tecnologia: o checklist de 8 perguntas que evita o arrependimento',
+        lede: 'Não é o preço que define se uma compra foi boa — são os fatores invisíveis. Garantia, suporte, peças, atualizações. Use esse checklist antes de qualquer compra acima de R$ 500.',
+        date: '27 abr 2026',
+        readTime: '5 min de leitura',
+        image: 'Imagens/Checklist.jpg',
+        body: `
+          <p>Todo mundo já comprou aquele produto barato no exterior que chegou em 60 dias, veio sem nota e quebrou em 3 meses sem garantia. Esse artigo é a vacina. Faça essas 8 perguntas <strong>antes</strong> de clicar em "comprar".</p>
+
+          <h2>1. O produto tem garantia oficial no Brasil?</h2>
+          <p>Garantia internacional do fabricante <strong>não cobre custos de envio</strong> de volta para outro país. Na prática, garantia internacional ≈ sem garantia. Confirme se o produto tem CNPJ brasileiro responsável.</p>
+
+          <h2>2. Qual é o prazo real de entrega?</h2>
+          <p>Marketplaces internacionais costumam mostrar "7 a 15 dias" e entregar em 45. Antes de comprar, abra a página do vendedor e veja os comentários recentes mencionando prazo. <strong>Avaliações de mais de 6 meses não contam</strong>.</p>
+
+          <h2>3. O vendedor tem selo de confiança?</h2>
+          <p>Mercado Livre tem "MercadoLíder Platinum". Amazon tem "Lojista verificado". Shopee tem "Shopee Mall". Sem esses selos, suas chances de problema crescem exponencialmente.</p>
+
+          <h2>4. A política de devolução é razoável?</h2>
+          <p>O CDC garante 7 dias de arrependimento em compras online. Mas alguns vendedores exigem "produto lacrado" e cobram frete de retorno. <strong>Leia antes de comprar</strong> — sempre.</p>
+
+          <h2>5. Existem peças de reposição?</h2>
+          <p>Comprar um aparelho da Bambu Lab ou Anycubic faz sentido porque <strong>existe rede de peças no Brasil</strong>. Comprar marca obscura no AliExpress significa que se quebrar um motor, vira lixo eletrônico.</p>
+
+          <h2>6. O fabricante ainda lança atualizações de firmware?</h2>
+          <p>Para qualquer dispositivo "smart" (router, projetor, smartphone, smartwatch), pesquise no Google: <em>"[marca + modelo] firmware update"</em>. Se o último update foi há mais de 18 meses, fuja.</p>
+
+          <h2>7. Há suporte técnico em português?</h2>
+          <p>Suporte por chatbot em inglês, com tradução automática, geralmente é teatro. Marcas como Samsung, Logitech, Sony, Apple, JBL e Xiaomi têm <strong>suporte real em português</strong>. Cheque antes.</p>
+
+          <h2>8. Existe comunidade ativa do produto?</h2>
+          <p>Reddit, Discord, grupos do Facebook — comunidades ativas significam tutoriais, mods, soluções de problemas e troca de peças. Para produtos técnicos (impressora 3D, drone, câmera), isso pode valer mais que o suporte oficial.</p>
+
+          <blockquote>A regra prática: se você não consegue responder com <strong>"sim, confiante"</strong> a pelo menos 6 dessas 8 perguntas, pense duas vezes antes de comprar.</blockquote>
+
+          <h2>Cheat-sheet final</h2>
+          <ol>
+            <li>Garantia oficial no Brasil ✅</li>
+            <li>Prazo real verificado em comentários recentes ✅</li>
+            <li>Vendedor com selo do marketplace ✅</li>
+            <li>Política de devolução clara ✅</li>
+            <li>Peças de reposição disponíveis ✅</li>
+            <li>Firmware atualizado nos últimos 18 meses ✅</li>
+            <li>Suporte em português ✅</li>
+            <li>Comunidade ativa ✅</li>
+          </ol>
+
+          <p>Salve esse checklist nos favoritos. Daqui a 6 meses, na próxima compra grande, ele vai te poupar de pelo menos uma dor de cabeça cara.</p>
+        `
+      }
+    };
+
+    /* ─── Open / close article page ─── */
+    const articlePage = $('#article-page');
+
+    window.readArticle = (id) => {
+      const a = ARTICLES[id];
+      if (!a) {
+        showToast('Conteúdo completo em breve.');
+        return;
+      }
+
+      // Populate
+      const catClass = `badge badge-${a.category}`;
+      $('#articleCategory').innerHTML = `<span class="${catClass}">${a.categoryLabel}</span>`;
+      $('#articleTitle').textContent     = a.title;
+      $('#articleLede').textContent      = a.lede;
+      $('#articleDate').textContent      = a.date;
+      $('#articleReadTime').textContent  = a.readTime;
+      $('#articleHero').innerHTML        = `<img src="${a.image}" alt="${a.title}" loading="lazy" />`;
+      $('#articleBody').innerHTML        = a.body;
+
+      // Show
+      els.mainContent.style.display = 'none';
+      els.sobrePage.classList.remove('visible');
+      articlePage.classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+
+    window.closeArticle = () => {
+      articlePage.classList.remove('visible');
+      els.mainContent.style.display = '';
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+
+    /* ─── Search placeholder ─── */
+    window.openSearch = () => {
+      const term = prompt('O que você quer descobrir hoje?');
+      if (term && term.trim()) {
+        showToast(`Buscando por "${term.trim()}"...`);
+      }
+    };
+
+    /* ─── Toast ─── */
+    let toastTimer = null;
+    window.showToast = (msg) => {
+      els.toastMsg.textContent = msg;
+      els.toast.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => els.toast.classList.remove('visible'), 2800);
+    };
+
+    /* ─── Keyboard shortcuts ─── */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        window.closeModal();
+        window.closeMenu();
+      }
+      // "/" triggers search
+      if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+        window.openSearch();
+      }
+    });
+
+    /* ─── Reveal on scroll (IntersectionObserver) ─── */
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      $$('.reveal').forEach(el => io.observe(el));
+    } else {
+      $$('.reveal').forEach(el => el.classList.add('in'));
+    }
+
+    /* ─── Animated stats counter ─── */
+    const animateCount = (el) => {
+      const target = parseFloat(el.dataset.count);
+      const isFloat = !Number.isInteger(target);
+      const duration = 1600;
+      const start = performance.now();
+
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3); // cubic ease-out
+        const current = target * eased;
+        el.textContent = isFloat
+          ? current.toFixed(1) + 'M'
+          : Math.floor(current).toLocaleString('pt-BR');
+        if (t < 1) requestAnimationFrame(tick);
+        else {
+          el.textContent = isFloat
+            ? target.toFixed(1) + 'M'
+            : (target >= 100 ? target.toLocaleString('pt-BR') : target + (target === 98 ? '%' : ''));
+          // small fixes for specific stats:
+          if (target === 1280) el.textContent = '1.280';
+          if (target === 98)   el.textContent = '98%';
+          if (target === 48)   el.textContent = '48';
+        }
+      };
+      requestAnimationFrame(tick);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const statsObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            $$('.stat__num', entry.target).forEach(animateCount);
+            statsObs.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+      const statsBlock = $('.stats__inner');
+      if (statsBlock) statsObs.observe(statsBlock);
+    }
+
+    /* ─── Click ripple on cards ─── */
+    const addRipple = (e, host) => {
+      const r = document.createElement('span');
+      const rect = host.getBoundingClientRect();
+      Object.assign(r.style, {
+        position: 'absolute',
+        width: '8px', height: '8px',
+        borderRadius: '50%',
+        background: 'rgba(37,99,235,.18)',
+        pointerEvents: 'none',
+        left: `${e.clientX - rect.left - 4}px`,
+        top:  `${e.clientY - rect.top - 4}px`,
+        transform: 'scale(0)',
+        animation: 'ripple .6s ease-out forwards',
+        zIndex: '10',
+      });
+      host.appendChild(r);
+      setTimeout(() => r.remove(), 700);
+    };
+
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `@keyframes ripple { to { transform: scale(40); opacity: 0; } }`;
+    document.head.appendChild(rippleStyle);
+
+    $$('.card, .featured, .trend-item').forEach(host => {
+      host.style.position = 'relative';
+      host.style.overflow = host.style.overflow || 'hidden';
+      host.addEventListener('click', (e) => addRipple(e, host));
+    });
+
+    /* ─── Prevent footer "#" links from jumping ─── */
+    $$('footer a[href="#"]').forEach(a => {
+      a.addEventListener('click', e => e.preventDefault());
+    });
+
+    /* ─── Init ─── */
+    onScroll();
+    console.log('%cCuriosTech', 'background: linear-gradient(90deg,#2563eb,#06b6d4); color:#fff; padding:6px 14px; border-radius:6px; font-weight:700; font-size:14px;', 'pronto para curiosidade ✨');
+  })();
+  </script>
+</body>
+</html>
